@@ -35,9 +35,10 @@ class StudentController < ApplicationController
   @parsed_file.each do |row|
   c=Student.new
   c.admission_no=row[0]
-  c.class_roll_no=row[1]
-  c.admission_date=row[2]
-  c.first_name= row[3]
+  c.first_name=row[1]
+  c.middle_name=row[2]
+  c.last_name= row[3]
+  c.batch_id=row[4]
   if c.save
   n=n+1
   GC.start if n%50==0
