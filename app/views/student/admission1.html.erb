@@ -42,22 +42,22 @@
 <%#Codelabs implementation for bulk student import%>
  <% form_for :dump, :url=>{:action=>"bulk_upload_students"}, :html => { :multipart => true } do |f| %>
    <table>
-    <h3>Bulk Student Registration</h3>
-   <tr>
-   <td>
-   <div class="filefont">
-   <b>Select a CSV File :</b>
-   </div>
-   </td>
-   <td >
-   <%= f.file_field :file -%>
-   </td>
-   </tr>
-   <tr>
-  <td colspan='2'>
-  <%= submit_tag 'Submit' -%>
-  </td>
-  </tr>
+     <h3>Bulk Student Registration</h3>
+     <tr>
+       <td>
+         <div class="filefont">
+           <b>Select a CSV File :</b>
+         </div>
+       </td>
+       <td >
+        <%= f.file_field :file -%>
+       </td>
+     </tr>
+     <tr>
+      <td colspan='2'>
+        <%= submit_tag 'Submit' -%>
+      </td>
+    </tr>
   </table>
  <% end -%>
 

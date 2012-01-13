@@ -26,26 +26,36 @@ class StudentController < ApplicationController
     :delete, :edit, :add_guardian, :email, :remove, :reports, :profile,
     :guardians, :academic_pdf,:show_previous_details,:fees,:fee_details
   ]
-# Import facility for student records Codelabs Inc.
-  require 'csv'
+  
   def bulk_upload_students
-  if request.post?
-  @parsed_file=CSV::Reader.parse(params[:dump][:file])
-  n=0
-  @parsed_file.each do |row|
-  c=Student.new
-  c.admission_no=row[0]
-  c.first_name=row[1]
-  c.middle_name=row[2]
-  c.last_name= row[3]
-  c.batch_id=row[4]
-  if c.save
-  n=n+1
-  GC.start if n%50==0
-  end
-  end
-  flash[:notice]="CSV Import Successful, #{n} new records added to data base"
+    file = params[:dump][:file]
+    saved_record = 0
+    headers = []
+    @bulk_upload_errors = []
+    FCSV.parse(file.read).each_with_index do | line, _ |
+      next if _ == 0
+      s = Student.new( :admission_no => line[0], :first_name => line[1], :middle_name => line[2],
+      :last_name => line[3], :batch_id => line[4], :date_of_birth => line[5], :gender => line[6],
+      :admission_date => line[7] )
+      if s.save
+        saved_record += 1
+      else
+        @bulk_upload_errors << { :record => line, :errors => s.errors.to_a }
+        p @bulk_upload_errors
+      end
     end
+    # FCSV.foreach(file.read, :headers => true, :header_converters => :symbol) do |line|
+    #   s = Student.new(line.to_hash)
+    #   unless s.save
+    #     @bulk_upload_errors << { :record => line.to_hash, :errors => s.errors.to_a }
+    #   end
+    # end
+    if saved_record.zero?
+      flash[:notice] = "CSV Import failed, Make sure to have all required attributes."
+    else
+      flash[:notice]="CSV Import Successful, #{saved_record} of total #{saved_record + @bulk_upload_errors.size} students were added successfully."
+    end
+    redirect_to :back
   end
   
   def academic_report_all
