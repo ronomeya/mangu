@@ -25,7 +25,7 @@ class ExamGroup < ActiveRecord::Base
   has_many :exams, :dependent => :destroy
   before_destroy :removable?
 
-  accepts_nested_attributes_for :exams
+  accepts_nested_attributes_for :exams, :allow_destroy => true
 
   attr_accessor :maximum_marks, :minimum_marks, :weightage
   validates_associated :exams

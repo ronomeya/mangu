@@ -39,6 +39,10 @@
     <%= f.label :minimum_marks %>
     <div class="text-input-bg"> <%= f.text_field :minimum_marks %></div>
   </div>
+  <div class="label-field-pair">
+    <%= f.label :weightage %>
+    <div class="text-input-bg"> <%= f.text_field :weightage %></div>
+  </div>
 
 <h4>Enter exam related details here:</h4>
 
@@ -47,6 +51,7 @@
       <td>Subject name</td>
       <td>Max Marks</td>
       <td>Min Marks</td>
+      <td>Weightage</td>
       <td>Start time</td>
       <td>End time</td>
       <td>Do not create</td>
@@ -70,6 +75,13 @@
         </div>
         </td>
         <td class="col-1">
+        <div class="label-field-pair2">
+        <div class="text-input-bg2">
+        <%= exam_form.text_field :weightage, :size => 4, :class => 'weightage' %>
+        </div>
+        </div>
+        </td>
+        <td class="col-1">
          <div class="label-field-pair3">
         <div class="text-input-bg3">
         <%= exam_form.calendar_date_select :start_time %>
@@ -85,7 +97,7 @@
         <td class="col-1">
          <div class="label-field-pair2">
         <div class="text-input-bg2">
-        <%= exam_form.check_box :_delete %>
+        <%= exam_form.check_box :_destroy %>
         </div>
         </div>
         </td>
@@ -100,4 +112,5 @@
 <script>
   $('exam_group_maximum_marks').observe('blur', function() { $$('.max_marks')      .each(function(max_marks_obj){ max_marks_obj.value = $F('exam_group_maximum_marks'); }); });
   $('exam_group_minimum_marks').observe('blur', function() { $$('.min_marks')      .each(function(min_marks_obj){ min_marks_obj.value = $F('exam_group_minimum_marks'); }); });
+  $('exam_group_weightage').observe('blur', function() { $$('.weightage').each(function(min_marks_obj){ min_marks_obj.value = $F('exam_group_weightage'); }); });
 </script>
