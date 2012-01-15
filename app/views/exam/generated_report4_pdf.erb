@@ -29,17 +29,20 @@
     <div id="pdf-info">
       <table id="pdf-table" width="100%" cellspacing="0">
         <tr class="table-header">
+          <% calculated_total_weightage = [] %>
           <td>Subject</td>
           <% @exam_groups.each do |exam_group| %>
             <td><%= exam_group.name %></td>
           <% end %>
           <td>Total</td>
+          <td>Total Weightage</td>
         </tr>
         <% c ='even' %>
         <% @subjects.each do |subject| %>
           <tr class="<%= cycle(c,(["odd","even"]-[c]).first) %>">
             <td class="col-pdf" ><%= subject.name %></td>
             <% @mmg = 1;@g = 1 %>
+            <% student_calculated_total_weightage = [] %>
             <% @exam_groups.each do |exam_group| %>
 
               <% @exam = Exam.find_by_subject_id_and_exam_group_id(subject.id,exam_group.id) %>
@@ -48,8 +51,10 @@
                 <% unless @exam.nil? %>
                   <% if exam_group.exam_type == "MarksAndGrades" %>
                     <%= exam_score.nil? ? '-' :  "#{(exam_score.marks || "-")}" +"/"+@exam.maximum_marks.to_s+"[#{(exam_score.grading_level || "-")}]" %>
+                    <% student_calculated_total_weightage << exam_score.calculated_weightage %>
                   <% elsif exam_group.exam_type == "Marks" %>
                     <%= exam_score.nil? ? '-' : "#{exam_score.marks || "-"}/"+@exam.maximum_marks.to_s %>
+                    <% student_calculated_total_weightage << exam_score.calculated_weightage %>
                   <% else %>
                     <%= exam_score.nil? ? '-' : (exam_score.grading_level || '-')  %>
                     <% @g = 0 %>
@@ -62,6 +67,8 @@
             <% total_score = ExamScore.new() %>
             <% if @mmg == @g %>
               <td class="col-pdf"><%= total_score.grouped_exam_subject_total(subject,@student,@type) %></td>
+              <% calculated_total_weightage << student_calculated_total_weightage  %>
+              <td class="col-pdf"><%= student_calculated_total_weightage.sum %></td>
             <% else %>
               <td class="col-pdf">-</td>
             <% end %>
@@ -87,6 +94,7 @@
             <% end %>
           <% end %>
           <td></td>
+          <td><%= calculated_total_weightage.flatten.sum %></td>
         </tr>
       </table>
     </div>
