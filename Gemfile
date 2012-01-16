@@ -1,5 +1,6 @@
 source :gemcutter
 gem "rails", "2.3.14"
+gem "rake", "0.8.7"
 
 # gem "mysql2"
 gem 'mysql2', '< 0.3'
