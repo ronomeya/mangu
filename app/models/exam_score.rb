@@ -21,7 +21,7 @@ class ExamScore < ActiveRecord::Base
   belongs_to :exam
   belongs_to :grading_level
 
-  before_save :calculate_grade
+  before_save :calculate_grade, :calculate_weightage
 
   def calculate_percentage
     percentage = self.marks.to_i * 100 / self.exam.maximum_marks
@@ -100,6 +100,17 @@ class ExamScore < ActiveRecord::Base
         self.grading_level_id = grade.id if exam_type == 'MarksAndGrades'
       else
         self.grading_level_id = nil
+      end
+    end
+  end
+  
+  def calculate_weightage
+    unless exam.exam_group.exam_type == 'Grades'
+      unless marks.blank?
+        #converts max_mark to 100%
+        converter = 100 / exam.maximum_marks.to_f
+        out_of_hundred = marks.to_i * converter
+        self.calculated_weightage = (out_of_hundred * exam.weightage)/100
       end
     end
   end

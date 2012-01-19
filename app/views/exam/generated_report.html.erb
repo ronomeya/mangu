@@ -66,6 +66,7 @@
     <% end %>
     <% total_marks_attained = 0 %>
     <% total_max_marks = 0 %>
+    <% total_weightage_marks = 0 %>
 
     <table id="listing" align="center" width="100%" cellpadding="1" cellspacing="1">
       <tr class="tr-head">
@@ -74,6 +75,7 @@
           <td>Obtained Marks</td>
           <td>Max Marks</td>
           <td>Percentage(%)</td>
+          <td>Weightage</td>
         <% elsif @exam_group.exam_type == 'Grades' %>
           <td>Grades</td>
         <% else %>
@@ -81,6 +83,7 @@
           <td>Max Marks</td>
           <td>Grades</td>
           <td>Percentage(%)</td>
+          <td>Weightage</td>
         <% end %>
       </tr>
       <% exam_score.each do |es| %>
@@ -92,6 +95,8 @@
             <td class="col-1"><%= es.exam.maximum_marks %></td>
             <% total_max_marks = total_max_marks+es.exam.maximum_marks%>
             <td class="col-1"><%= es.calculate_percentage %></td>
+            <% total_weightage_marks += es.calculated_weightage %>
+            <td class="col-1"><%= "#{es.calculated_weightage}(#{es.exam.weightage}%)" %></td>
           <% elsif @exam_group.exam_type == 'Grades' %>
             <td class="col-1"><%= es.grading_level || "-" %></td>
           <% else %>
@@ -101,6 +106,8 @@
             <% total_max_marks = total_max_marks+es.exam.maximum_marks%>
             <td class="col-1"><%= es.grading_level || "-" %></td>
             <td class="col-1"><%= es.calculate_percentage %></td>
+            <% total_weightage_marks += es.calculated_weightage %>
+            <td class="col-1"><%= "#{es.calculated_weightage}(#{es.exam.weightage}%)" %></td>
           <% end %>
         </tr>
       <% end %>
@@ -113,6 +120,7 @@
             <td>-</td>
           <% end %>
           <td><%= "%.2f" %(total_marks_attained*100/total_max_marks) unless total_max_marks == 0 %></td>
+          <td><%= total_weightage_marks %></td>
         </tr>
       <% end %>
     </table>

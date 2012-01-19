@@ -1,4 +1,5 @@
 WickedPdf.config = {
+
     #:wkhtmltopdf => '/home/user/wkhtmltopdf-i386',
     :wkhtmltopdf => '/usr/bin/wkhtmltopdf',
     :layout => "pdf.html",

@@ -40,9 +40,11 @@
         <table id="pdf-table" width="100%" cellspacing="0">
           <% c = 'even'  %>
           <%  if @exam_group.exam_type == 'Marks' %>
-            <tr class="table-header"><td class="col-pdf">Subject</td><td class="col-pdf"> Marks Obtained </td><td class="col-pdf">Maximum marks</td><td class="col-pdf">Percentage(%)</td></tr>
+            <tr class="table-header"><td class="col-pdf">Subject</td><td class="col-pdf"> Marks Obtained </td><td class="col-pdf">Maximum marks</td><td class="col-pdf">Percentage(%)</td><td>Weightage</td>
+            </tr>
             <% total_marks = 0 %>
             <% total_max_marks = 0 %>
+            <% total_weightage_marks = 0 %>
             <% @exam_group.exams.each_with_index do |exam,i|  %>
               <% exam_score = ExamScore.find_by_student_id_and_exam_id(student,exam) %>
               <% unless exam_score.nil? %>
@@ -65,6 +67,8 @@
                 <td class="col-pdf"> <%= mark %> </td>
                 <td class="col-pdf"><%= exam.maximum_marks %></td>
                 <td class="col-pdf"><%= (exam_score.calculate_percentage unless exam_score.nil?) %></td>
+                <% total_weightage_marks += exam_score.calculated_weightage %>
+                <td class="col-1"><%= "#{exam_score.calculated_weightage}(#{exam_score.exam.weightage}%)" %></td>
               </tr>
             <% end %>
             <tr class="<%= cycle(c,(["odd","even"]-[c]).first) %>">
@@ -72,6 +76,7 @@
               <td class="col-pdf"> <%= total_marks %> </td>
               <td class="col-pdf"><%= total_max_marks %></td>
               <td class="col-pdf"><%= @total_percentage %></td>
+              <td class="col-pdf"><%= total_weightage_marks %></td>
             </tr>
           <%  elsif @exam_group.exam_type == 'Grades' %>
             <tr class="table-header"><td class="col-pdf">Subject</td><td class="col-pdf"> Grade </td></tr>
@@ -94,6 +99,7 @@
             <tr class="table-header"><td class="col-pdf">Subject</td><td class="col-pdf"> Grade </td><td class="col-pdf"> Marks Obtained </td><td class="col-pdf"> Maximum marks </td><td class="col-pdf"> Percentage(%) </td></tr>
             <% total_marks = 0 %>
             <% total_max_marks = 0 %>
+            <% total_weightage_marks = 0 %>
             <% @exam_group.exams.each do |exam| %>
               <% exam_score = ExamScore.find_by_student_id_and_exam_id(student,exam) %>
               <% unless exam_score.nil? %>
@@ -112,6 +118,8 @@
                 <td class="col-pdf"> <%= mark %> </td>
                 <td class="col-pdf"> <%= exam.maximum_marks %> </td>
                 <td class="col-pdf"> <%= (exam_score.calculate_percentage unless exam_score.nil?) %> </td>
+                <% total_weightage_marks += exam_score.calculated_weightage %>
+                <td class="col-1"><%= "#{exam_score.calculated_weightage}(#{exam_score.exam.weightage}%)" %></td>
               </tr>
             <% end %>
             <tr class="<%= cycle(c,(["odd","even"]-[c]).first) %>">
@@ -120,6 +128,7 @@
               <td class="col-pdf"> <%= total_marks %> </td>
               <td class="col-pdf"> <%= total_max_marks %> </td>
               <td class="col-pdf"> <%= (@total_percentage) %> </td>
+              <td class="col-pdf"><%= total_weightage_marks %></td>
             </tr>
           <% end %>
         </table>
