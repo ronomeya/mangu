@@ -9,6 +9,7 @@ gem "sqlite3-ruby", :require => "sqlite3"
 gem "searchlogic", "2.4.27"
 gem "fastercsv"
 gem 'wicked_pdf'
+gem "test-unit"
 
 # bundler requires these gems in all environments
 # gem "nokogiri", "1.4.2"
