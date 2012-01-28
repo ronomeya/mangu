@@ -4,7 +4,7 @@ development:
       database: mangu
       port: 3306
       username: root
-      password: root
+      password: kipkemoi
 
 test: &test
       host: localhost
